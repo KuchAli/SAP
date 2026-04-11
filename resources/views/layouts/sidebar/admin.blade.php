@@ -11,51 +11,45 @@
     <div class="nav flex-column gap-1">
 
         <a href="{{ route('admin.dashboard') }}"
-           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
+           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
 
             <span>🏠</span> Dashboard
         </a>
 
         <a href="{{ route('admin.buku.index') }}"
-           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
+           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg   {{ request()->routeIs('admin.buku.*') ? 'active' : '' }}">
 
             <span>📖</span> Buku
         </a>
 
         <a href="{{ route('admin.user.index') }}"
-           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
+           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg {{ request()->routeIs('admin.user.*') ? 'active' : '' }}">
 
             <span>👤</span> Anggota
         </a>
 
-        <a href="#"
-           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
+        <a href="{{ route('admin.tarif.index') }}"
+           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg {{ request()->routeIs('admin.tarif.*') ? 'active' : '' }}">
 
             <span>💰</span> Tarif
         </a>
 
-        <a href="#"
-           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
+        <a href="{{ route('admin.peminjaman.index') }}"
+           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg {{ request()->routeIs('admin.peminjaman.*') ? 'active' : '' }}">
 
             <span>📥</span> Peminjaman
         </a>
 
-        <a href="#"
-           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
+        <a href="{{ route('admin.pengembalian.index') }}"
+           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg {{ request()->routeIs('admin.pengembalian.*') ? 'active' : '' }}">
 
             <span>📤</span> Pengembalian
         </a>
 
-        <a href="#"
-           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
+        <a href="{{ route('admin.transaksi.index') }}"
+           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg {{ request()->routeIs('admin.transaksi.*') ? 'active' : ''}}">
 
             <span>🔄</span> Transaksi
-        </a>
-
-        <a href="#"
-           class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
-
-            <span>📊</span> Laporan
         </a>
 
         <hr>

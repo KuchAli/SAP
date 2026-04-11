@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_buku');
             $table->date('tanggal_peminjaman');
             $table->date('tanggal_pengembalian')->nullable();
-            $table->enum('status', ['dipinjam', 'dikembalikan'])->default('dipinjam');
+            $table->enum('status', ['dipinjam', 'dikembalikan','rusak','terlambat'])->default('dipinjam');
             $table->timestamps();
 
             $table->foreign('user_id')->references('user_id')->on('users');
