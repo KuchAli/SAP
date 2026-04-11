@@ -14,7 +14,7 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::resource('/buku', BukuController::class);
-        Route::resource('/anggota', UserController::class);
+        Route::resource('/user', UserController::class);
         Route::resource('/transaksi', TransaksiController::class);
         Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
     });

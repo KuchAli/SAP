@@ -3,19 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function index()
     {
-        return view('admin.user.index');
+        $anggota = User::all();
+        return view('admin.user.index', compact('anggota'));
     }
 
     public function create()
     {
-        return view('admin.user.create');
+        $user = User::all();   
+        return view('admin.user.create', compact('user'));
     }
 
     public function store(Request $request)
@@ -24,7 +28,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:6|confirmed',
             'role' => 'required|in:admin,anggota',
         ]);
 
@@ -32,8 +36,8 @@ class UserController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'role' => 'anggota', // Set role default sebagai anggota
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
         return redirect()->route('admin.user.index')->with('success', 'User berhasil ditambahkan');
@@ -52,19 +56,24 @@ class UserController extends Controller
         // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->user_id. ',user_id',
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|in:admin,anggota',
         ]);
 
         // Update data user
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if ($request->password) {
-            $user->password = bcrypt($request->password);
+        $data=[
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role ?? 'anggota',
+        ];
+
+        // hanya update password jika diisi
+        if ($request->filled('password')) {
+            $data['password'] = $request->password; // auto-hash
         }
-        $user->role = 'anggota'; // Set role default sebagai anggota
-        $user->save();
+
+        $user->update($data);
+       
 
         return redirect()->route('admin.user.index')->with('success', 'User berhasil diperbarui');
     }

@@ -22,7 +22,7 @@
             <span>📖</span> Buku
         </a>
 
-        <a href="{{ route('admin.anggota.index') }}"
+        <a href="{{ route('admin.user.index') }}"
            class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-dark hover-bg">
 
             <span>👤</span> Anggota
