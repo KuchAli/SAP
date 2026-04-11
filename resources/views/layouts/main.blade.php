@@ -115,6 +115,10 @@
                         'dashboard' => 'Dashboard',
                         'buku' => 'Data Buku',
                         'peminjaman' => 'Data Peminjaman',
+                        'pengembalian' => 'Data Pengembalian',
+                        'user' => 'Data Anggota',
+                        'tarif' => 'Data Tarif',
+                        'transaksi' => 'Data Transaksi',
                     ];
                 @endphp
 
