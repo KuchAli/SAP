@@ -40,5 +40,4 @@ Route::prefix('admin')
             [TransaksiController::class, 'dendaKerusakan'])
             ->name('transaksi.denda.kerusakan');
 
-        Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
     });

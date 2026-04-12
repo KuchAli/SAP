@@ -6,6 +6,7 @@
 
     {{-- Bootstrap saja (hapus Tailwind biar clean) --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
   <style>
     body {
@@ -83,7 +84,7 @@
     @auth
         <div class="p-4 ">
 
-            <h5 class="fw-bold mb-3 text-secondary text-center ">📚 Perpustakaan</h5>
+            <h5 class="fw-bold mb-3 text-secondary text-center "><i class="bi bi-collection-fill"></i> Perpustakaan</h5>
 
             @php
                 $role = auth()->user()->role;

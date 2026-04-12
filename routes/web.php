@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LogoutController;
 
 use function PHPUnit\Framework\directoryExists;
 
@@ -22,6 +23,8 @@ Route::post('/', [LoginController::class, 'Login']);
 
 Route::get('/register', [RegisterController::class, 'showRegister'])->name('register');
 Route::post('/register', [RegisterController::class, 'Register']);
+
+Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 
 require __DIR__.'/web-admin.php'; 
