@@ -12,8 +12,36 @@ class BukuController extends Controller
 {
     public function index()
     {
-        $buku = Buku::with('kategori')->get();
+        $sortMap = [
+            'newest' => ['created_at', 'desc'],
+            'oldest' => ['created_at', 'asc'],
+            'az' => ['judul_buku', 'asc'],
+            'za' => ['judul_buku', 'desc'],
+        ];
         
+        $query = Buku::query();
+
+        //search & sort
+
+        if (request()->has('search')) {
+            $search = request('search');
+           $query->where('judul_buku', 'like', "%$search%")
+                ->orWhereHas('kategori', function ($q) use ($search) {
+                    $q->where('name', 'like', "%$search%");
+                });
+        } else {
+            $query = Buku::query();
+        }
+
+
+        if (request()->has('sort') && isset($sortMap[request('sort')])) {
+            $query->orderBy(...$sortMap[request('sort')]);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $buku = $query->paginate(3)->withQueryString();
+
         return view('admin.buku.index', compact('buku'));
     }
 

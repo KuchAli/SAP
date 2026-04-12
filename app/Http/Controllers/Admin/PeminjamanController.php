@@ -16,8 +16,38 @@ class PeminjamanController extends Controller
 {
     public function index()
     {
-        $peminjaman = Peminjaman::all(); // Ambil semua data peminjaman
-        return view('admin.peminjaman.index', compact('peminjaman')); // Logika untuk menampilkan daftar peminjaman
+       $query = Peminjaman::query();
+
+        // FILTER STATUS
+        if (request()->filled('status')) {
+            $query->where('status', request('status'));
+        }
+
+        // SEARCH
+        if (request()->filled('search')) {
+            $search = request('search');
+
+            $query->where(function ($q) use ($search) {
+                $q->where('status', 'like', "%$search%")
+                ->orWhereHas('buku', function ($q2) use ($search) {
+                    $q2->where('judul_buku', 'like', "%$search%");
+                });
+            });
+        }
+
+        // PRIORITY SORT STATUS (optional tetap boleh)
+        $query->orderByRaw("
+            CASE 
+                WHEN status = 'dipinjam' THEN 1
+                WHEN status = 'terlambat' THEN 2
+                WHEN status = 'rusak' THEN 3
+                WHEN status = 'dikembalikan' THEN 4
+                ELSE 5
+            END
+        ");
+
+        $peminjaman = $query->paginate(3)->withQueryString();
+        return view('admin.peminjaman.index', compact('peminjaman'));
     }
 
     public function create()

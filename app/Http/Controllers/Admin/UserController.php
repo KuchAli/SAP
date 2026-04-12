@@ -12,7 +12,34 @@ class UserController extends Controller
 {
     public function index()
     {
-        $anggota = User::all();
+       $sortMap = [
+            'newest' => ['created_at', 'desc'],
+            'oldest' => ['created_at', 'asc'],
+            'az' => ['name', 'asc'],
+            'za' => ['name', 'desc'],
+        ];
+        
+        $query = User::query();
+
+        //search & sort
+
+        if (request()->has('search')) {
+            $search = request('search');
+            $query = User::where('name', 'like', "%$search%")
+                ->orWhere('email', 'like', "%$search%");
+        } else {
+            $query = User::query();
+        }
+
+
+        if (request()->has('sort') && isset($sortMap[request('sort')])) {
+            $query->orderBy(...$sortMap[request('sort')]);
+        } else {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        $anggota = $query->paginate(3)->withQueryString();
+
         return view('admin.user.index', compact('anggota'));
     }
 

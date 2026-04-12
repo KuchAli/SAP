@@ -11,11 +11,48 @@ use App\Models\Pengembalian;
 
 class TransaksiController extends Controller
 {
-    public function index()
+   public function index()
     {
-        $transaksi = Transaksi::with(['peminjaman', 'tarif'])
-            ->latest()
-            ->get();
+        $query = Transaksi::with('peminjaman');
+
+        // FILTER STATUS
+        if (request()->filled('status')) {
+            $query->whereHas('peminjaman', function ($q) {
+                $q->where('status', request('status'));
+            });
+        }
+
+        // SEARCH
+        if (request()->filled('search')) {
+            $search = request('search');
+
+            $query->where(function ($q) use ($search) {
+                $q->where('jenis_transaksi', 'like', "%$search%")
+                ->orWhereHas('peminjaman', function ($q2) use ($search) {
+                    $q2->where('status', 'like', "%$search%");
+                });
+            });
+        }
+
+        // JOIN untuk sorting status
+        $query->join('peminjaman', 'transaksis.id_peminjaman', '=', 'peminjaman.id_peminjaman')
+            ->select('transaksis.*')
+
+            // 🔥 PRIORITAS 1: DATA TERBARU
+            ->orderBy('transaksis.created_at', 'desc')
+
+            // 🔥 PRIORITAS 2: STATUS ORDER
+            ->orderByRaw("
+                CASE 
+                    WHEN peminjaman.status = 'dipinjam' THEN 1
+                    WHEN peminjaman.status = 'terlambat' THEN 2
+                    WHEN peminjaman.status = 'rusak' THEN 3
+                    WHEN peminjaman.status = 'dikembalikan' THEN 4
+                    ELSE 5
+                END
+            ");
+
+        $transaksi = $query->paginate(3)->withQueryString();
 
         return view('admin.transaksi.index', compact('transaksi'));
     }

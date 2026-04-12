@@ -17,7 +17,42 @@
 
     <div class="card shadow-sm border-0">
         <div class="card-body">
+                <div class="card border-0 rounded mb-4 outline-none justify-content-between d-flex">
+                    <!-- Search & Sort -->
+                    <form method="GET" action="{{ route('admin.buku.index') }}" 
+                        class="row g-3 align-items-end">
 
+                        <div class="col-md-4">
+                            <label for="search" class="form-label mb-1">Search</label>
+                            <input 
+                                type="text" 
+                                name="search"
+                                value="{{ request('search') }}"
+                                placeholder="cari judul atau kategori..."
+                                class="form-control"
+                            >
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="sort" class="form-label mb-1">Sort By</label>
+                            <select name="sort" onchange="this.form.submit()"
+                                    class="form-select">
+                                <option value="newest" {{ request('sort')=='newest'?'selected':'' }}>Terbaru</option>
+                                <option value="oldest" {{ request('sort')=='oldest'?'selected':'' }}>Terlama</option>
+                                <option value="az" {{ request('sort')=='az'?'selected':'' }}>A - Z</option>
+                                <option value="za" {{ request('sort')=='za'?'selected':'' }}>Z - A</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2 ms-auto d-flex justify-content-end">
+                            <button class="btn btn-primary">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
 
