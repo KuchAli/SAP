@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use App\Models\Peminjaman;
 use App\Models\Tarif;
-use Illuminate\Http\Request;
+use App\Models\Pengembalian;
+
 
 class TransaksiController extends Controller
 {
@@ -19,67 +20,44 @@ class TransaksiController extends Controller
         return view('admin.transaksi.index', compact('transaksi'));
     }
 
-    public function create()
-    {
-        $peminjaman = Peminjaman::all();
-        $tarif = Tarif::all();
-
-        return view('admin.transaksi.create', compact('peminjaman', 'tarif'));
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'id_peminjaman' => 'required|exists:peminjaman,id_peminjaman',
-            'id_tarif' => 'required|exists:tarifs,id_tarif',
-            'total_bayar' => 'required|numeric',
-            'jenis_transaksi' => 'required|in:peminjaman,denda',
-            'tanggal_transaksi' => 'required|date',
-        ]);
-
-        Transaksi::create([
-            'id_peminjaman' => $request->id_peminjaman,
-            'id_tarif' => $request->id_tarif,
-            'total_bayar' => $request->total_bayar,
-            'jenis_transaksi' => $request->jenis_transaksi,
-            'tanggal_transaksi' => $request->tanggal_transaksi,
-        ]);
-
-        return redirect()->route('admin.transaksi.index')
-            ->with('success', 'Transaksi berhasil ditambahkan');
-    }
+    
 
     public function show($id)
     {
         $transaksi = Transaksi::with(['peminjaman', 'tarif'])
             ->findOrFail($id);
 
-        return view('admin.transaksi.show', compact('transaksi'));
+        return view('admin.transaksi.detail', compact('transaksi'));
     }
     public function dendaTerlambat($id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
 
-        $tarif = Tarif::where('jenis_tarif', 'terlambat')->first();
+        $tarif = Tarif::where('jenis_tarif', 'terlambat')->firstOrFail();
 
-        $tanggalKembali = $peminjaman->tanggal_kembali;
+
+        $tanggalKembali = \Carbon\Carbon::parse($peminjaman->tanggal_pengembalian);
         $sekarang = now();
 
-        $hariTerlambat = 0;
+        $hariTerlambat = $sekarang->greaterThan($tanggalKembali)
+            ? $tanggalKembali->diffInDays($sekarang)
+            : 0;
+        
+        $total = $hariTerlambat * $tarif->tarif;
 
-        if ($sekarang > $tanggalKembali) {
-            $hariTerlambat = $sekarang->diffInDays($tanggalKembali);
-        }
 
         if ($hariTerlambat <= 0) {
             return back()->with('info', 'Tidak ada keterlambatan');
         }
 
-        $total = $hariTerlambat * $tarif->tarif;
+        // 🔥 UPDATE STATUS PEMINJAMAN
+        $peminjaman->update([
+            'status' => 'terlambat'
+        ]);
 
-        // cegah double denda
+        // cegah double
         $cek = Transaksi::where('id_peminjaman', $id)
-            ->where('jenis_transaksi', 'denda_terlambat')
+            ->where('jenis_transaksi', 'denda')
             ->exists();
 
         if ($cek) {
@@ -87,11 +65,17 @@ class TransaksiController extends Controller
         }
 
         Transaksi::create([
-            'id_peminjaman' => $id,
+            'id_peminjaman' => $peminjaman->id_peminjaman,
             'id_tarif' => $tarif->id_tarif,
             'total_bayar' => $total,
-            'jenis_transaksi' => 'denda_terlambat',
+            'jenis_transaksi' => 'denda',
             'tanggal_transaksi' => now(),
+        ]);
+
+        Pengembalian::firstOrCreate([
+            'id_peminjaman' => $peminjaman->id_peminjaman,
+        ], [
+            'tanggal_pengembalian' => $peminjaman->tanggal_pengembalian
         ]);
 
         return back()->with('success', 'Denda terlambat dibuat');
@@ -107,26 +91,41 @@ class TransaksiController extends Controller
             return back()->with('error', 'Tarif kerusakan belum ada');
         }
 
-        // cegah double
+        // update status
+        $peminjaman->update([
+            'status' => 'rusak'
+        ]);
+
+        // cegah double transaksi
         $cek = Transaksi::where('id_peminjaman', $id)
-            ->where('jenis_transaksi', 'denda_kerusakan')
+            ->where('jenis_transaksi', 'denda')
             ->exists();
 
         if ($cek) {
             return back()->with('error', 'Denda kerusakan sudah ada');
         }
 
+        // otomatis total bayar
+        $total = $tarif->tarif;
+
         Transaksi::create([
-            'id_peminjaman' => $id,
+            'id_peminjaman' => $peminjaman->id_peminjaman,
             'id_tarif' => $tarif->id_tarif,
-            'total_bayar' => $tarif->tarif,
-            'jenis_transaksi' => 'denda_kerusakan',
+            'total_bayar' => $total,
+            'jenis_transaksi' => 'denda',
             'tanggal_transaksi' => now(),
+        ]);
+
+        // 🔥 AUTO PENGEMBALIAN
+       // 🔥 INSERT PENGEMBALIAN (INI YANG KAMU MAU)
+        Pengembalian::firstOrCreate([
+            'id_peminjaman' => $peminjaman->id_peminjaman,
+        ], [
+            'tanggal_pengembalian' => $peminjaman->tanggal_pengembalian
         ]);
 
         return back()->with('success', 'Denda kerusakan ditambahkan');
     }
-
     public function destroy($id)
     {
         $transaksi = Transaksi::findOrFail($id);

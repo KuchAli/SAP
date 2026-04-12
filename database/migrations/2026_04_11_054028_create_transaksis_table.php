@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('transaksis', function (Blueprint $table) {
             $table->bigIncrements('id_transaksi');
             $table->unsignedBigInteger('id_peminjaman');
-            $table->unsignedBigInteger('id_tarif');
+            $table->unsignedBigInteger('id_tarif')->nullable();
             $table->decimal('total_bayar', 10, 0);
             $table->enum('jenis_transaksi', ['peminjaman', 'denda']);
             $table->date('tanggal_transaksi'); 

@@ -48,8 +48,8 @@
                                 {{ $p->buku->judul_buku }}
                             </td>
 
-                            <td>{{ $p->tanggal_pinjam }}</td>
-                            <td>{{ $p->tanggal_kembali }}</td>
+                            <td>{{ $p->tanggal_peminjaman }}</td>
+                            <td>{{ $p->tanggal_pengembalian }}</td>
 
                             <td>
                                 @if($p->status == 'dipinjam')

@@ -21,27 +21,27 @@
                         <label>User</label>
                         <select name="user_id" class="form-control" required>
                             @foreach($user as $u)
-                                <option value="{{ $u->user_id }}">{{ $u->name }} </option>
+                                <option value="{{ $u->user_id }}" {{ old('user_id') == $u->user_id ? 'selected' : '' }}>{{ $u->name }} </option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
                         <label>Buku</label>
-                        <select name="buku_id" class="form-control" required>
+                        <select name="id_buku" class="form-control" required>
                             @foreach($buku as $b)
-                                <option value="{{ $b->id_buku }}">{{ $b->judul_buku }} </option>
+                                <option value="{{ $b->id_buku }}" {{ old('id_buku') == $b->id_buku ? 'selected' : '' }}>{{ $b->judul_buku }} </option>
                             @endforeach
                         </select>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Tanggal Pinjam</label>
-                        <input type="date" name="tanggal_pinjam" class="form-control" required>
+                        <input type="date" name="tanggal_peminjaman" class="form-control" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Tanggal Kembali</label>
-                        <input type="date" name="tanggal_kembali" class="form-control" required>
+                        <input type="date" name="tanggal_pengembalian" class="form-control" required>
                     </div>
 
                     <div class="col-md-6 mb-3">

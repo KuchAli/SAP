@@ -11,7 +11,11 @@
 
     <div class="card shadow-sm border-0">
         <div class="card-body">
-
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    {{ implode('', $errors->all(':message')) }}
+                </div>
+            @endif
             <form action="{{ route('admin.peminjaman.update', $peminjaman->id_peminjaman) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -30,9 +34,9 @@
                     </div>
                     <div class="mb-3">
                         <label>Buku</label>
-                        <select name="buku_id" class="form-control" required>
+                        <select name="id_buku" class="form-control" required>
                             @foreach($buku as $b)
-                                <option value="{{ $b->id_buku }}" {{ $b->id_buku == $peminjaman->buku_id ? 'selected' : '' }}>
+                                <option value="{{ $b->id_buku }}" {{ $b->id_buku == $peminjaman->id_buku ? 'selected' : '' }}>
                                     {{ $b->judul_buku }}
                                 </option>
                             @endforeach
@@ -41,12 +45,12 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Tanggal Pinjam</label>
-                        <input type="date" name="tanggal_pinjam" class="form-control" value="{{ $peminjaman->tanggal_pinjam }}" required>
+                        <input type="date" name="tanggal_peminjaman" class="form-control" value="{{ $peminjaman->tanggal_peminjaman }}" required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Tanggal Kembali</label>
-                        <input type="date" name="tanggal_kembali" class="form-control" value="{{ $peminjaman->tanggal_kembali }}" required>
+                        <input type="date" name="tanggal_pengembalian" class="form-control" value="{{ $peminjaman->tanggal_pengembalian }}" required>
                     </div>
 
                     <div class="col-md-6 mb-3">

@@ -7,7 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Buku;
 use App\Models\Pengembalian;
+use App\Models\Transaksi;
+use App\Models\Tarif;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PeminjamanController extends Controller
 {
@@ -24,31 +27,56 @@ class PeminjamanController extends Controller
         return view('admin.peminjaman.create', compact('user', 'buku')); // Logika untuk menampilkan form peminjaman baru
     }
 
+   
+
     public function store(Request $request)
     {
-       $request->validate([
+        $request->validate([
             'user_id' => 'required|exists:users,user_id',
-            'buku_id' => 'required|exists:buku,id_buku',
-            'tanggal_pinjam' => 'required|date',
-            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
-            'status' => 'required|in:dipinjam,dikembalikan',
+            'id_buku' => 'required|exists:bukus,id_buku',
+            'tanggal_peminjaman' => 'required|date',
+            'tanggal_pengembalian' => 'required|date|after_or_equal:tanggal_peminjaman',
         ]);
 
-        Peminjaman::create([
-            'user_id' => $request->user_id,
-            'id_buku' => $request->id_buku,
-            'tanggal_pinjam' => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali,
-            'status' => $request->status,
-        ]);
+        DB::transaction(function () use ($request) {
+            $buku = Buku::findOrFail($request->id_buku);
 
-        return redirect()->route('admin.peminjaman.index')->with('success', 'Peminjaman berhasil ditambahkan');
+            if ($buku->stok <= 0) {
+                return back()->with('error', 'Stok buku habis');
+            }
+
+            $buku->decrement('stok');
+
+            $peminjaman = Peminjaman::create([
+                'user_id' => $request->user_id,
+                'id_buku' => $request->id_buku,
+                'tanggal_peminjaman' => $request->tanggal_peminjaman,
+                'tanggal_pengembalian' => $request->tanggal_pengembalian,
+                'status' => 'dipinjam',
+            ]);
+            $tarif = Tarif::where('jenis_tarif', 'peminjaman')->firstOrFail();
+
+            $total = $tarif->tarif;
+
+            Transaksi::create([
+                'id_peminjaman' => $peminjaman->id_peminjaman,
+                'id_tarif' => $tarif->id_tarif,
+                'total_bayar' => $total,
+                'jenis_transaksi' => 'peminjaman',
+                'tanggal_transaksi' => now(),
+            ]);
+        });
+
+        return redirect()->route('admin.peminjaman.index')
+            ->with('success', 'Peminjaman & transaksi berhasil dibuat');
     }
 
     public function edit($id)
     {
+        $buku = Buku::all();
+        $user = User::where('role', 'anggota')->get(); // Ambil semua data user untuk dropdown
         $peminjaman = Peminjaman::findOrFail($id);
-        return view('admin.peminjaman.edit', compact('peminjaman')); // Logika untuk menampilkan form edit peminjaman
+        return view('admin.peminjaman.edit', compact('peminjaman','user','buku')); // Logika untuk menampilkan form edit peminjaman
     }
 
    
@@ -59,10 +87,10 @@ class PeminjamanController extends Controller
 
         $request->validate([
             'user_id' => 'required|exists:users,user_id',
-            'id_buku' => 'required|exists:buku,id_buku',
-            'tanggal_pinjam' => 'required|date',
-            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
-            'status' => 'required|in:dipinjam,dikembalikan',
+            'id_buku' => 'required|exists:bukus,id_buku',
+            'tanggal_peminjaman' => 'required|date',
+            'tanggal_pengembalian' => 'required|date|after_or_equal:tanggal_peminjaman',
+            'status' => 'required|in:dipinjam,dikembalikan,rusak,terlambat',
         ]);
 
         // 🔥 SIMPAN STATUS LAMA
@@ -71,8 +99,8 @@ class PeminjamanController extends Controller
         $data = [
             'user_id' => $request->user_id,
             'id_buku' => $request->id_buku,
-            'tanggal_pinjam' => $request->tanggal_pinjam,
-            'tanggal_kembali' => $request->tanggal_kembali,
+            'tanggal_peminjaman' => $request->tanggal_peminjaman,
+            'tanggal_pengembalian' => $request->tanggal_pengembalian,
             'status' => $request->status,
         ];
 
@@ -87,7 +115,7 @@ class PeminjamanController extends Controller
             if (!$cek) {
                 Pengembalian::create([
                     'id_peminjaman' => $peminjaman->id_peminjaman,
-                    'tanggal_pengembalian' => now(),
+                    'tanggal_pengembalian' => $peminjaman->tanggal_pengembalian  
                 ]);
             }
         }

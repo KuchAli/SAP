@@ -23,7 +23,7 @@
     <div class="card border-0 shadow-sm">
         <div class="card-body">
 
-            <div class="table-responsive">
+            <div class="table-responsive" >
                 <table class="table table-hover align-middle">
 
                     <thead class="table-light">
@@ -59,34 +59,58 @@
                             <td>{{ $t->tanggal_transaksi }}</td>
 
                             <td>
-                                {{ $t->peminjaman->status ?? '-' }}
+                                @if($t->peminjaman->status  == 'dipinjam' )
+                                    <span class="badge bg-success">Di Pinjam</span>
+                                @elseif($t->peminjaman->status  == 'dikembalikan')
+                                    <span class="badge bg-secondary">Di Kembalikan</span>
+                                @elseif($t->peminjaman->status  == 'rusak')
+                                    <span class="badge bg-danger">Rusak</span>
+                                @elseif($t->peminjaman->status  == 'terlambat')
+                                    <span class="badge bg-warning">Terlambat</span>
+                                @endif 
                             </td>
-
                             <td class="text-center">
-                                <a href="{{ route('admin.transaksi.show', $t->id_transaksi) }}" 
-                                class="btn btn-sm btn-info">
-                                    Detail
-                                </a>
-
-                                <form action="{{ route('admin.transaksi.denda.terlambat', $p->id_peminjaman) }}" method="POST">
-                                    @csrf
-                                    <button class="btn btn-warning btn-sm fw-bold">Denda Terlambat</button>
-                                </form>
-                                <form action="{{ route('admin.transaksi.denda.kerusakan', $p->id_peminjaman) }}" method="POST">
-                                    @csrf
-                                    <button class="btn btn-warning btn-sm fw-bold">Denda Kerusakan</button>
-                                </form>
-
-                                <form action="{{ route('admin.transaksi.destroy', $t->id_transaksi) }}" 
-                                    method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button onclick="return confirm('Yakin hapus transaksi?')" 
-                                            class="btn btn-sm btn-danger">
-                                        Hapus
+                                <div class="dropdown  position-static">
+                                    <button class="btn btn-sm btn-primary dropdown-toggle" data-bs-toggle="dropdown"  >
+                                        Aksi
                                     </button>
-                                </form>
+
+                                    <ul class="dropdown-menu position-absolute">
+
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('admin.transaksi.show', $t->id_transaksi) }}">
+                                                Detail
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <form action="{{ route('admin.transaksi.denda.terlambat', $t->id_peminjaman) }}" method="POST">
+                                                @csrf
+                                                <button class="dropdown-item">Denda Terlambat</button>
+                                            </form>
+                                        </li>
+
+                                        <li>
+                                            <form action="{{ route('admin.transaksi.denda.kerusakan', $t->id_peminjaman) }}" method="POST">
+                                                @csrf
+                                                <button class="dropdown-item">Denda Kerusakan</button>
+                                            </form>
+                                        </li>
+
+                                        <li><hr class="dropdown-divider"></li>
+
+                                        <li>
+                                            <form action="{{ route('admin.transaksi.destroy', $t->id_transaksi) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="dropdown-item text-danger">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        </li>
+
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                         @empty
