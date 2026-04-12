@@ -17,45 +17,61 @@
         <div class="col-md-7">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <strong>Terjadi kesalahan:</strong>
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <form action="{{ route('admin.buku.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
                             <label class="form-label">Judul Buku</label>
-                            <input type="text" name="judul_buku" class="form-control" placeholder="Masukkan judul buku">
+                            <input type="text" name="judul_buku" class="form-control" placeholder="Masukkan judul buku" value="{{ old('judul_buku') }}" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Penulis</label>
-                            <input type="text" name="penulis" class="form-control" placeholder="Nama penulis">
+                            <input type="text" name="penulis" class="form-control" placeholder="Nama penulis"  value="{{ old('penulis') }}" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Penerbit</label>
-                            <input type="text" name="penerbit" class="form-control" placeholder="Nama penerbit">
+                            <input type="text" name="penerbit" class="form-control" placeholder="Nama penerbit"  value="{{ old('penerbit') }}" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Tahun Terbit</label>
-                            <input type="number" name="tahun_terbit" class="form-control" placeholder="Tahun terbit buku">
+                            <input type="number" name="tahun_terbit" class="form-control" placeholder="Tahun terbit buku"  value="{{ old('tahun_terbit') }}"required>
                         </div>
 
-
+                        
                         <div class="mb-3">
-                            <label class="form-label">Kategori</label>
-                            <input type="text" name="kategori" class="form-control" placeholder="Kategori buku">
+                            <label class="from-label">Kategori</label>
+                            <select name="id_kategori" class="form-control" required>
+                                <option value="">-- Pilih Kategori --</option>
+                                @foreach($kategori as $k)
+                                    <option value="{{ $k->id }}" {{ old('id_kategori') == $k->id ? 'selected' : '' }}>
+                                        {{ $k->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Stok</label>
-                            <input type="number" name="stok" class="form-control" placeholder="Jumlah stok">
+                            <input type="number" name="stok" class="form-control" placeholder="Jumlah stok"  value="{{ old('stok') }}" required>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Cover Buku</label>
                             <input type="file" name="gambar_buku" class="form-control" accept="image/*"
-                                onchange="previewImage(event)">
+                                onchange="previewImage(event)" required>
                         </div>
 
                         <button class="btn btn-primary w-100">

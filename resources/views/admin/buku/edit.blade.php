@@ -18,7 +18,7 @@
             <div class="card shadow-sm border-0">
                 <div class="card-body">
 
-                    <form action="{{ route('buku.update', $buku->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.buku.update', $buku->id_buku) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -45,12 +45,17 @@
                             <input type="number" name="tahun_terbit" class="form-control"
                                    value="{{ $buku->tahun_terbit }}">
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Kategori</label>
-                            <input type="text" name="kategori" class="form-control"
-                                   value="{{ $buku->kategori }}">
-                        </div>
+                         <div class="mb-3">
+                            <label for="">Kategori</label>
+                            <select name="id_kategori" class="form-control">
+                                @foreach($kategori as $k)
+                                    <option value="{{ $k->id }}"
+                                        {{ $buku->id_kategori == $k->id ? 'selected' : '' }}>
+                                        {{ $k->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Stok</label>
@@ -87,7 +92,7 @@
                 <div class="card-body text-center">
 
                     <img id="preview"
-                         src="{{ $buku->cover ? asset('storage/'.$buku->cover) : 'https://via.placeholder.com/300x400?text=No+Image' }}"
+                         src="{{ $buku->gambar_buku ? asset('storage/'.$buku->gambar_buku) : 'https://via.placeholder.com/300x400?text=No+Image' }}"
                          class="img-fluid rounded shadow-sm"
                          style="max-height: 420px; object-fit: cover;">
 

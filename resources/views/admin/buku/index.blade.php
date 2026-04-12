@@ -23,7 +23,7 @@
 
                     <thead class="table-light">
                         <tr>
-                            <th>No</th>
+                            <th>Kode Buku</th>
                             <th>Judul</th>
                             <th>Penulis</th>
                             <th>Kategori</th>
@@ -37,14 +37,18 @@
                     <tbody>
                         @forelse ($buku as $item)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td class="fw-semibold">{{ $item->judul }}</td>
+                            <td>BKU-{{ str_pad($item->id_buku, 3, '0', STR_PAD_LEFT) }}</td>
+                            <td class="fw-semibold">{{ $item->judul_buku }}</td>
                             <td>{{ $item->penulis }}</td>
-                            <td>{{ $item->kategori }}</td>
+                            <td>{{ $item->kategori->name }}</td>
                             <td>
-                                <span class="badge bg-info">
+                                <span >
                                     {{ $item->stok }}
                                 </span>
+                            </td>
+                            
+                            <td>
+                                <span>{{ $item->slug_buku }}</span>
                             </td>
                             <td>
                                 @if($item->stok > 0)
@@ -52,9 +56,6 @@
                                 @else
                                     <span class="badge bg-warning">Di Pinjam</span>
                                 @endif
-                            </td>
-                            <td>
-                                <span>{{ $item->slug_buku }}</span>
                             </td>
 
                             <td class="text-center">
