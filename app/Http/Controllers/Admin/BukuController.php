@@ -40,7 +40,7 @@ class BukuController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $buku = $query->paginate(3)->withQueryString();
+        $buku = $query->paginate(7)->withQueryString();
 
         return view('admin.buku.index', compact('buku'));
     }

@@ -38,7 +38,7 @@ class UserController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $anggota = $query->paginate(3)->withQueryString();
+        $anggota = $query->paginate(7)->withQueryString();
 
         return view('admin.user.index', compact('anggota'));
     }

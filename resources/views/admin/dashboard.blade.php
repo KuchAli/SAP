@@ -39,23 +39,49 @@
 
     </div>
 
-    <div class="card mt-4 shadow-sm rounded-5">
-        <div class="card-header">
-            <strong>Buku Paling Sering Dipinjam</strong>
+   <div class="card mt-4 shadow-sm rounded-5 border-0">
+        <div class="card-header bg-white border-0">
+            <h6 class="mb-0 fw-bold">📚 Buku Paling Sering Dipinjam</h6>
         </div>
 
         <ul class="list-group list-group-flush">
-            @foreach ($dataBuku as $b )
-                <span>{{ $b->judul }}</span>
-                <img src="{{ asset('storage/' . $b->gambar_buku) }}" alt="Gambar Buku" class="img-thumbnail" style="width: 50px; height: 50px;">
-            @endforeach
-            @foreach($bukuPopuler as $buku)
-            <li class="list-group-item d-flex justify-content-between">
-            <span class="badge bg-primary">
-                {{ $buku }}x
-            </span>
+
+            @foreach ($dataBuku as $b)
+            <li class="list-group-item d-flex align-items-center justify-content-between">
+
+                {{-- LEFT SIDE --}}
+                <div class="d-flex align-items-center gap-4">
+
+                    <img src="{{ asset('storage/' . $b->gambar_buku) }}"
+                        alt="Gambar Buku"
+                        class=" shadow-sm"
+                        style="width:45px; height:45px; object-fit:cover;">
+
+                    <div>
+                        <div class="fw-semibold">
+                            {{ $b->judul_buku }}
+                        </div>
+                        <div>
+                         Penulis :  <small class="text-muted">{{ $b->penulis ?? '-' }}</small>
+                        </div>
+                        <div>
+                            Penerbit: <small class="text-muted">{{ $b->penerbit ?? '-' }}</small>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- RIGHT SIDE --}}
+                <span class="badge bg-primary rounded-pill">
+                    Total Peminjaman: 
+                    {{ $b->peminjaman_count }}x
+                </span>
+
             </li>
             @endforeach
+
         </ul>
+        <div class="mt-4">
+            {{ $dataBuku -> links() }}
+        </div>
     </div>
 @endsection

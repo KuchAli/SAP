@@ -108,6 +108,10 @@
                     </tbody>
 
                 </table>
+
+                <div class="mt-4">
+                    {{ $buku->links() }}
+                </div>
             </div>
 
         </div>

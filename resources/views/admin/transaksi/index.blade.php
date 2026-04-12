@@ -158,6 +158,10 @@
                     </tbody>
 
                 </table>
+
+                <div class="mt-4">
+                    {{ $transaksi->links() }}
+                </div>
             </div>
 
         </div>

@@ -20,15 +20,12 @@ class DashboardController extends Controller
             ->where('tanggal_pengembalian', '<', now()->toDateString())
             ->count();
 
-        $dataBuku = Buku::select('id_buku', 'judul_buku', 'penulis')->get();
-
-        $bukuPopuler = Peminjaman::select('id_buku')
-            ->groupBy('id_buku')
-            ->orderByRaw('COUNT(*) DESC')
-            ->limit(5)
-            ->get();
+       $dataBuku = Buku::select('id_buku', 'judul_buku', 'penulis', 'gambar_buku','penerbit')
+        ->withCount('peminjaman')
+        ->orderByDesc('peminjaman_count')
+        ->paginate(5);
         return view('admin.dashboard', compact('totalBuku', 
                 'bukuDipinjam', 'kembaliHariIni', 'terlambat', 
-                'dataBuku', 'bukuPopuler'));
+                'dataBuku'));
     }
 }

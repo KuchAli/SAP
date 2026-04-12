@@ -46,7 +46,7 @@ class PeminjamanController extends Controller
             END
         ");
 
-        $peminjaman = $query->paginate(3)->withQueryString();
+        $peminjaman = $query->paginate(5)->withQueryString();
         return view('admin.peminjaman.index', compact('peminjaman'));
     }
 

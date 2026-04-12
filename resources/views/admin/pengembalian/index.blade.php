@@ -94,6 +94,9 @@
                     </tbody>
 
                 </table>
+                <div class="mt-4">
+                    {{ $pengembalian->links() }}
+                </div>
             </div>
 
         </div>

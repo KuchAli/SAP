@@ -52,7 +52,7 @@ class TransaksiController extends Controller
                 END
             ");
 
-        $transaksi = $query->paginate(3)->withQueryString();
+        $transaksi = $query->paginate(5)->withQueryString();
 
         return view('admin.transaksi.index', compact('transaksi'));
     }

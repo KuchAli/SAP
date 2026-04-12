@@ -118,6 +118,9 @@
                     </tbody>
 
                 </table>
+                <div class="mt-4">
+                    {{ $peminjaman->links() }}
+                </div>
             </div>
 
         </div>

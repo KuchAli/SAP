@@ -36,7 +36,7 @@ class PengembalianController extends Controller
             $query->orderBy('created_at', 'desc');
         }
 
-        $pengembalian = $query->paginate(3)->withQueryString();
+        $pengembalian = $query->paginate(5)->withQueryString();
 
         return view('admin.pengembalian.index', compact('pengembalian'));
     }
