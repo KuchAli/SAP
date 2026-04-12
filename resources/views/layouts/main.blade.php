@@ -238,6 +238,35 @@
             left: auto;
         }
 
+       .nav-sidebar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 10px 12px;
+            margin-bottom: 6px;
+
+            border-radius: 10px;
+
+            color: #374151;
+            text-decoration: none;
+
+            transition: all 0.2s ease;
+        }
+
+        .nav-sidebar:hover {
+            background: #eef2ff;
+            color: #1a1a1d;
+            transform: translateX(4px);
+        }   
+
+        .nav-sidebar.active {
+            background: #656568;
+            color: #ffffff !important;
+
+            box-shadow: 0 6px 15px rgba(79, 70, 229, 0.25);
+        }
+
         
         /* Responsive */
         @media (max-width: 568px) {
@@ -306,10 +335,12 @@
 
             {{-- ================= SIDEBAR ADMIN & PETUGAS ================= --}}
             <div class="col-lg-2 col-md-3 d-md-block">
-                <aside class=" p-4 px-4" style="width: 250px;">
+                <aside class=" p-4 px-5" style="width: 250px;">
                     <div class=" mb-3 pb-2 border-bottom">
-                        <div class="fw-semibold text-dark fs-4 ">
-                             <i class="bi bi-book"></i> Perpustakaan
+                        <div class=" text-dark text-center">
+                             <h3 class="fw-bold">
+                                <i class="bi bi-book"></i> Perpustakaan
+                            </h3>
                         </div>
                         <small class="text-muted">
                             Management System
