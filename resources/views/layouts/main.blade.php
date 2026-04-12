@@ -2,146 +2,353 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Aplikasi Perpustakaan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Parking Application')</title>
 
-    {{-- Bootstrap saja (hapus Tailwind biar clean) --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    {{-- CSS Global --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-  <style>
-    body {
-        background: #f4f6fb;
-        font-family: 'Inter', sans-serif;
-    }
 
-    /* SIDEBAR */
-    .sidebar {
-        width: 270px;
-        background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
-        border-right: 1px solid #eef0f4;
-        min-height: 100vh;
-        box-shadow: 8px 0 20px rgba(0,0,0,0.03);
-    }
+    
+    {{-- CSS untuk sidebar --}}
+    <style>
+         * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    .sidebar h5 {
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        color: #4f46e5;
-    }
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        .sidebar {
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+        }
 
-    /* NAV LINK */
-    .nav-link {
-        color: #374151 !important;
-        transition: all 0.2s ease;
-    }
+        .btn-edit:hover {
+            color: var(--primary);
+        }
+        
+        .btn-delete:hover {
+            color: red;
+            
+        }
+        
+        .main-content {
+            min-height: 100vh;
+        }
 
-    .nav-link:hover {
-        background: #eef2ff;
-        color: #4f46e5 !important;
-        transform: translateX(3px);
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex: 1;
+        }
 
-    /* ACTIVE MENU */
-    .nav-link.active {
-        background: #4f46e5;
-        color: #fff !important;
-    }
-    /* NAVBAR */
-    .navbar-top {
-        height: 65px;
-        background: rgba(255,255,255,0.8);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid #eef0f4;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-    }
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
 
-    /* CONTENT */
-    .content-area {
-        padding: 24px;
-    }
+        .card-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
 
-    /* CARD STYLE (IMPORTANT) */
-    .card-soft {
-        border: none;
-        border-radius: 18px;
-        background: #ffffff;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        transition: 0.3s;
-    }
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .card-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 10px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            
+        }
 
-    .card-soft:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 14px 40px rgba(0,0,0,0.08);
-    }
-</style>
+       
+
+        
+       .attendance-table {
+            background-color: white;
+            width: 100%;
+            border-collapse: collapse
+            
+        }
+
+       
+        
+        .attendance-table thead {
+            background-color: var(--light);
+        }
+        
+        .attendance-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .attendance-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .attendance-table tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+
+         /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .status-admin {
+            background-color: rgba(35, 128, 204, 0.374);
+            color: var(--primary);
+        }
+        
+        .status-petugas {
+            background-color: rgba(47, 223, 71, 0.341);
+            color: var(--success);
+        }
+        
+        .status-owner {
+            background-color: rgba(80, 77, 73, 0.241);
+            color: var(--secondary);
+        }
+
+        .status-unknown {
+            background-color: rgba(158, 158, 158, 0.15);
+            color: var(--danger);
+        }
+
+        .status-select, .time-input, .note-input {
+            padding: 10px 12px;
+            border: 1px solid var(--light-gray);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .quick-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .input-group{
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+       .nav-strip {
+            position: relative;
+            padding-bottom: 6px;
+        }
+
+        .nav-strip::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0%;
+            height: 2px;
+            background-color: #f2f3f4; /* warna biru bootstrap */
+            transition: width 0.3s ease;
+        }
+
+        .nav-strip:hover::after {
+            width: 100%;
+        }
+
+        .nav-strip.active::after {
+            width: 100%;
+        }
+
+      
+
+        .nav-link {
+            border-radius: 10px;
+            padding: 6px 12px;
+            transition: all 0.25s ease;
+            opacity: 0.85;
+            transition: 0.2s;
+            padding: 6px 10px;
+            white-space: nowrap;
+        }
+       
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .navbar-nav {
+            flex-wrap: nowrap;
+           
+            gap: 6px;
+        }
+
+        .dropdown-menu {
+            position: absolute !important;
+            right: 0;
+            left: auto;
+        }
+
+        
+        /* Responsive */
+        @media (max-width: 568px) {
+            .sidebar {
+                min-height: auto;
+                position: static;
+            }
+            .navbar-nav {
+                flex-direction: row;
+                gap: 7px !important;;
+            }
+
+            .nav-text {
+                display: none;
+            }
+
+            .nav-link {
+                padding: 7px 12px;
+            }
+
+            .navbar {
+                padding: 8px 7px;
+            }
+            .navbar-brand {
+                font-size: 16px;
+                max-width: 150px;
+                white-space: normal;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .navbar .rounded-circle {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 12px;
+            }
+            
+            .navbar .dropdown-toggle span {
+                display: none;
+            }
+           .dropdown-menu {
+                position: absolute !important;
+                right: 0;
+                left: auto;
+            }
+        }
+    </style>
+
+    @stack('styles')
 </head>
-
 <body>
 
-<div class="d-flex">
+<div class="container-fluid px-0">
+    <div class="row g-0">
+        @php
+            $role = auth()->user()->role;
+        @endphp
 
-    {{-- SIDEBAR --}}
-    @auth
-        <div class="p-4 ">
+        @if($role === 'anggota')
 
-            <h5 class="fw-bold mb-3 text-secondary text-center "><i class="bi bi-collection-fill"></i> Perpustakaan</h5>
-
-            @php
-                $role = auth()->user()->role;
-            @endphp
-
-            @if($role === 'admin')
-                @include('layouts.sidebar.admin')
-
-            @elseif($role === 'anggota')
-                @include('layouts.sidebar.anggota');
-            @endif
-
-        </div>
-    @endauth
-
-
-    {{-- MAIN --}}
-    <div class="flex-grow-1">
-
-        {{-- NAVBAR --}}
-        <div class="navbar-top d-flex align-items-center justify-content-between px-4 rounded-5 mt-3">
-
-            <div class="text-muted text-md fw-semibold">
-                @php
-                    $route = Route::currentRouteName();
-                    $title = explode('.', $route)[1];
-
-                    $map = [
-                        'dashboard' => 'Dashboard',
-                        'buku' => 'Data Buku',
-                        'peminjaman' => 'Data Peminjaman',
-                        'pengembalian' => 'Data Pengembalian',
-                        'user' => 'Data Anggota',
-                        'tarif' => 'Data Tarif',
-                        'transaksi' => 'Data Transaksi',
-                    ];
-                @endphp
-
-                {{ $map[$title] ?? ucfirst($title) }}
+            {{-- ================= NAVBAR OWNER ================= --}}
+            <div class="col-12">
+                @include('layouts.navbar.anggota')
             </div>
 
-            <div class="fw-semibold">
-                {{ auth()->user()->name ?? 'Guest' }}
+        @else
+
+            {{-- ================= SIDEBAR ADMIN & PETUGAS ================= --}}
+            <div class="col-lg-2 col-md-3 d-md-block">
+                <aside class=" p-4 px-4" style="width: 250px;">
+                    <div class=" mb-3 pb-2 border-bottom">
+                        <div class="fw-semibold text-dark fs-4 ">
+                             <i class="bi bi-book"></i> Perpustakaan
+                        </div>
+                        <small class="text-muted">
+                            Management System
+                        </small>
+                    </div>
+                    @include('layouts.sidebar.' . $role)
+                </aside>
             </div>
 
-        </div>
+        @endif
 
-        {{-- CONTENT --}}
-        <div class="content-area">
-            @yield('content')
+        {{-- Konten Utama --}}
+        <div class="col-lg-10 col-md-9 main-content">
+            <div class="p-5">
+                <h3 class="mb-4">@yield('page-title')</h3>
+                @yield('content')
+            </div>
         </div>
-
     </div>
-
 </div>
 
+{{-- JS Global --}}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+{{-- JS untuk toggle sidebar di mobile --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebarToggler = document.querySelector('[data-bs-toggle="sidebar"]');
+        const sidebar = document.querySelector('.sidebar');
+        
+        if (sidebarToggler && sidebar) {
+            sidebarToggler.addEventListener('click', function() {
+                sidebar.classList.toggle('d-none');
+                sidebar.classList.toggle('d-md-block');
+            });
+        }
+    });
+</script>
+
+@stack('scripts')
 </body>
 </html>

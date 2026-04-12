@@ -20,9 +20,9 @@ class AnggotaMiddleware
             return redirect()->route('login');
         }
 
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 'anggota') {
             return match (Auth::user()->role) {
-                'anggota' => redirect('anggota.dashboard'),
+                'admin' => redirect('admin.dashboard'),
                 default   => abort(403), // atau redirect('/login')
             };
         }

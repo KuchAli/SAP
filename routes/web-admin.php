@@ -3,7 +3,6 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BukuController;
 use App\Http\Controllers\Admin\TransaksiController;
-use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TarifController;
 use App\Http\Controllers\Admin\PeminjamanController;
