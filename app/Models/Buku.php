@@ -20,12 +20,18 @@ class Buku extends Model
         'penerbit',
         'tahun_terbit',
         'status',
-        'kategori'
+        'id_kategori',
+        'stok'
         
     ];
 
     public function peminjaman()
     {
         return $this->hasMany(Peminjaman::class, 'id_buku', 'id_buku');
+    }
+
+        public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'id_kategori');
     }
 }

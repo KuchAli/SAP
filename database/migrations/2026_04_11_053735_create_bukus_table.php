@@ -21,9 +21,11 @@ return new class extends Migration
             $table->integer('tahun_terbit');
             $table->integer('stok')->default(0);
             $table->enum('status', ['tersedia', 'dipinjam']);
-            $table->enum('kategori', ['novel', 'komik', 'pengetahuan', 'sejarah']);
+            $table->unsignedBigInteger('id_kategori');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('id_kategori')->references('id')->on('kategoris');
 
         });
     }
