@@ -88,12 +88,14 @@ class PeminjamanController extends Controller
 
             $total = $tarif->tarif;
 
+            $tanggal_transaksi= $peminjaman->tanggal_peminjaman;
+
             Transaksi::create([
                 'id_peminjaman' => $peminjaman->id_peminjaman,
                 'id_tarif' => $tarif->id_tarif,
                 'total_bayar' => $total,
                 'jenis_transaksi' => 'peminjaman',
-                'tanggal_transaksi' => now(),
+                'tanggal_transaksi' => $tanggal_transaksi,
             ]);
         });
 

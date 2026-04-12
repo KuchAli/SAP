@@ -11,17 +11,22 @@
             <h3 class="fw-bold mb-0">Data Transaksi</h3>
             <small class="text-muted">Kelola data transaksi peminjaman dan pengembalian buku</small>
         </div>
-
-       
-       
-        <a href="{{ route('admin.transaksi.create') }}" class="btn btn-sm btn-primary">
-            + Tambah Transaksi
-        </a>
         
     </div>
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+
+                @if(session('info'))
+                    <div class="alert alert-warning">{{ session('info') }}</div>
+                @endif
                 <div class="card border-0 rounded mb-4 outline-none justify-content-between d-flex">
                     <!-- Search & Sort -->
                     <form method="GET" action="{{ route('admin.transaksi.index') }}" 

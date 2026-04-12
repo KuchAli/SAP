@@ -7,6 +7,7 @@ use App\Models\Transaksi;
 use App\Models\Peminjaman;
 use App\Models\Tarif;
 use App\Models\Pengembalian;
+use Carbon\Carbon;
 
 
 class TransaksiController extends Controller
@@ -68,39 +69,42 @@ class TransaksiController extends Controller
     }
     public function dendaTerlambat($id)
     {
-        $peminjaman = Peminjaman::findOrFail($id);
+        // ambil data peminjaman (pakai PK yang benar)
+        $peminjaman = Peminjaman::where('id_peminjaman', $id)->firstOrFail();
 
+        // ambil tarif denda
         $tarif = Tarif::where('jenis_tarif', 'terlambat')->firstOrFail();
 
+        // normalisasi tanggal (hindari bug jam)
+        $tanggalKembali = Carbon::parse($peminjaman->tanggal_pengembalian)->startOfDay();
+        $sekarang = now()->startOfDay();
 
-        $tanggalKembali = \Carbon\Carbon::parse($peminjaman->tanggal_pengembalian);
-        $sekarang = now();
-
-        $hariTerlambat = $sekarang->greaterThan($tanggalKembali)
-            ? $tanggalKembali->diffInDays($sekarang)
-            : 0;
-        
-        $total = $hariTerlambat * $tarif->tarif;
-
-
-        if ($hariTerlambat <= 0) {
+        // ❌ belum terlambat
+        if ($sekarang->lessThanOrEqualTo($tanggalKembali)) {
             return back()->with('info', 'Tidak ada keterlambatan');
         }
 
-        // 🔥 UPDATE STATUS PEMINJAMAN
+        // ✅ hitung hari terlambat (akurat)
+        $hariTerlambat = $tanggalKembali->diffInDays($sekarang);
+
+        // total denda
+        $total = $hariTerlambat * $tarif->tarif;
+
+        // update status
         $peminjaman->update([
             'status' => 'terlambat'
         ]);
 
-        // cegah double
-        $cek = Transaksi::where('id_peminjaman', $id)
+        // cegah double denda
+        $cek = Transaksi::where('id_peminjaman', $peminjaman->id_peminjaman)
             ->where('jenis_transaksi', 'denda')
             ->exists();
 
         if ($cek) {
-            return back()->with('error', 'Denda terlambat sudah ada');
+            return back()->with('error', 'Denda sudah dibuat sebelumnya');
         }
 
+        // simpan transaksi denda
         Transaksi::create([
             'id_peminjaman' => $peminjaman->id_peminjaman,
             'id_tarif' => $tarif->id_tarif,
@@ -109,13 +113,13 @@ class TransaksiController extends Controller
             'tanggal_transaksi' => now(),
         ]);
 
-        Pengembalian::firstOrCreate([
-            'id_peminjaman' => $peminjaman->id_peminjaman,
-        ], [
-            'tanggal_pengembalian' => $peminjaman->tanggal_pengembalian
-        ]);
+        // simpan pengembalian (jika belum ada)
+        Pengembalian::firstOrCreate(
+            ['id_peminjaman' => $peminjaman->id_peminjaman],
+            ['tanggal_pengembalian' => $peminjaman->tanggal_pengembalian]
+        );
 
-        return back()->with('success', 'Denda terlambat dibuat');
+        return back()->with('success', "Denda berhasil dibuat ({$hariTerlambat} hari)");
     }
 
     public function dendaKerusakan($id)

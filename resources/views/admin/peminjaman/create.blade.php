@@ -47,8 +47,7 @@
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Status</label>
                         <select name="status" class="form-select" required>
-                            <option value="dipinjam">Pinjam</option>
-                            <option value="dikembalikan">Kembalikan</option> 
+                            <option value="dipinjam">Pinjam</option> 
                         </select>
                     </div>
 
