@@ -3,7 +3,7 @@
 **The book lending application system** is a system that I designed for library admins to make it easier to process library member data when borrowing books..
 
 
-<img src="{{ asset('iimages/gambar.png') }}" alt="images Dashboard Admin" width="700" class="align-items-center"/>
+<img src="{{ asset('images/gambar.png') }}" alt="images Dashboard Admin" width="700" class="align-items-center"/>
 
 
 ## Initial Preperation
