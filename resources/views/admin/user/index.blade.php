@@ -19,6 +19,17 @@
 
     <div class="card shadow-sm border-0">
         <div class="card-body">
+             @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+
+                @if(session('info'))
+                    <div class="alert alert-warning">{{ session('info') }}</div>
+                @endif
                 <div class="card border-0 rounded mb-4 outline-none justify-content-between d-flex">
                     <!-- Search & Sort -->
                     <form method="GET" action="{{ route('admin.user.index') }}" 
@@ -47,7 +58,7 @@
                         </div>
 
                         <div class="col-md-2 ms-auto d-flex justify-content-end">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-sm btn-primary">
                                 <i class="bi bi-search"></i> Search
                             </button>
                         </div>

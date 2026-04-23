@@ -11,15 +11,27 @@
             <h3 class="fw-bold mb-0">Data Tarif</h3>
             <small class="text-muted">Kelola data tarif perpustakaan</small>
         </div>
-
-        <a href="{{ route('admin.tarif.create') }}" class="btn btn-primary">
+        @if ($bolehTambah)
+        
+        <a href="{{ route('admin.tarif.create') }}" class="btn btn-sm  btn-primary">
             + Tambah Tarif
         </a>
+        @endif
     </div>
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
+             @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
 
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+
+                @if(session('info'))
+                    <div class="alert alert-warning">{{ session('info') }}</div>
+                @endif
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
 
@@ -48,9 +60,6 @@
                             <td>{{ $t->created_at->format('d M Y') }}</td>
 
                             <td class="text-center">
-                                <a href="{{ route('admin.tarif.edit', $t->id_tarif) }}" class="btn btn-sm btn-warning">
-                                    Edit
-                                </a>
 
                                 <form action="{{ route('admin.tarif.destroy', $t->id_tarif) }}" method="POST" class="d-inline">
                                     @csrf

@@ -15,6 +15,17 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body">
+             @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+
+                @if(session('info'))
+                    <div class="alert alert-warning">{{ session('info') }}</div>
+                @endif
              <div class="card border-0 rounded mb-4 outline-none justify-content-between d-flex">
                     <!-- Search & Sort -->
                     <form method="GET" action="{{ route('admin.pengembalian.index') }}" 
@@ -41,7 +52,7 @@
                         </div>
 
                         <div class="col-md-2 ms-auto d-flex justify-content-end">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-sm btn-primary">
                                 <i class="bi bi-search"></i> Search
                             </button>
                         </div>
@@ -73,14 +84,6 @@
                                 <a href="{{ route('admin.pengembalian.show', $p->id_pengembalian) }}" class="btn btn-sm btn-info">
                                     Detail
                                 </a>
-                                <form action="{{ route('admin.pengembalian.destroy', $p->id_pengembalian) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-
-                                    <button onclick="return confirm('Yakin hapus pengembalian?')" class="btn btn-sm btn-danger">
-                                        Hapus
-                                    </button>
-                                </form>
                             </td>
                             
                         </tr>

@@ -267,6 +267,29 @@
             box-shadow: 0 6px 15px rgba(79, 70, 229, 0.25);
         }
 
+         .password-toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        
+        .password-toggle-btn:hover {
+            color: #495057;
+        }
+        
+        .password-toggle-btn:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        
+
         
         /* Responsive */
         @media (max-width: 568px) {
@@ -335,7 +358,7 @@
 
             {{-- ================= SIDEBAR ADMIN & PETUGAS ================= --}}
             <div class="col-lg-2 col-md-3 d-md-block">
-                <aside class=" p-4 px-5" style="width: 250px;">
+                <aside class="p-3">
                     <div class=" mb-3 pb-2 border-bottom">
                         <div class=" text-dark text-center">
                              <h3 class="fw-bold">
@@ -353,7 +376,7 @@
         @endif
 
         {{-- Konten Utama --}}
-        <div class="col-lg-10 col-md-9 main-content">
+        <div class="col-lg-10 col-md-9 main-content ps-4">
             <div class="p-5">
                 <h3 class="mb-4">@yield('page-title')</h3>
                 @yield('content')
@@ -370,7 +393,10 @@
     document.addEventListener('DOMContentLoaded', function() {
         const sidebarToggler = document.querySelector('[data-bs-toggle="sidebar"]');
         const sidebar = document.querySelector('.sidebar');
-        
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const icon = togglePassword.querySelector('i');
+    
         if (sidebarToggler && sidebar) {
             sidebarToggler.addEventListener('click', function() {
                 sidebar.classList.toggle('d-none');

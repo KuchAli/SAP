@@ -29,17 +29,38 @@
                         <input type="email" name="email" class="form-control" placeholder="Email aktif" value="{{ old('email') }}">
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Password minimal 8 karakter"> 
+                    <label class="form-label">Password</label>
+                    <div class="d-flex mb-3">
+                         <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            class="form-control rounded-start me-3"
+                            autocomplete="new-password"
+                            placeholder="Masukkan Password"
+                        >
+                        <button
+                            class="btn btn-secondary rounded-end"
+                            type="button"
+                            onclick="togglePassword('password', this)"
+                        >
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Konfirmasi Password</label>
-                        <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi password">
+                    <label class="form-label">Konfirmasi Password</label>
+                    <div class="d-flex mb-3">
+                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control rounded-start me-3" placeholder="Ulangi password">
+                         <button
+                            class="btn btn-secondary rounded-end"
+                            type="button"
+                            onclick="togglePassword('password_confirmation', this)"
+                        >
+                            <i class="bi bi-eye"></i>
+                        </button>
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    <div class="mb-3">
                         <label class="form-label">Role</label>
                         <select name="role" class="form-select">
                             <option value="anggota" {{ old('role') == 'anggota' ? 'selected' : '' }}>Anggota</option>
@@ -68,4 +89,22 @@
 
 </div>
 
+<script>
+function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+
+    if (!input) return;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+    }
+}
+</script>
 @endsection
