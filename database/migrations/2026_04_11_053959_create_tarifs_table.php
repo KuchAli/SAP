@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,6 +18,7 @@ return new class extends Migration
             $table->bigIncrements('id_tarif');
             $table->enum('jenis_tarif', ['peminjaman', 'kerusakan', 'terlambat']);
             $table->decimal('tarif', 10, 0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

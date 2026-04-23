@@ -17,7 +17,7 @@ return new class extends Migration
             $table->date('tanggal_pengembalian');
             $table->timestamps();
 
-            $table->foreign('id_peminjaman')->references('id_peminjaman')->on('peminjaman');
+            $table->foreign('id_peminjaman')->references('id_peminjaman')->on('peminjaman')->onDelete('cascade');
         });
     }
 

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->enum('status', ['dipinjam', 'dikembalikan','rusak','terlambat'])->default('dipinjam');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('user_id')->on('users');
-            $table->foreign('id_buku')->references('id_buku')->on('bukus');
+            $table->foreign('user_id')->references('user_id')->on('users')->onUpdate('cascade');
+            $table->foreign('id_buku')->references('id_buku')->on('bukus')->onUpdate('cascade');
         });
     }
 
