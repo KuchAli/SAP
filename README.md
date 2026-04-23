@@ -3,7 +3,7 @@
 **The book lending application system** is a system that I designed for library admins to make it easier to process library member data when borrowing books..
 
 
-<img src="https://raw.githubusercontent.com/KuchAli/SAP/main/public/images/gambar.png" alt="Admin dashboard interface for a book lending application showing navigation menus and data panels in a clean professional layout" width="700" class="align-items-center"/>
+<img src="https://raw.githubusercontent.com/KuchAli/SAP/main/public/images/gambar1.png" alt="Admin dashboard interface for a book lending application showing navigation menus and data panels in a clean professional layout" width="700" class="align-items-center"/>
 
 
 ## Initial Preperation
